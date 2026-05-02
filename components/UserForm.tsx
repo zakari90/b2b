@@ -10,14 +10,20 @@ import { cn } from "@/lib/utils";
 
 export default function UserForm({ 
   fixedRole,
-  disableAdmin
+  disableAdmin,
+  onSuccess
 }: { 
   fixedRole?: "admin" | "saller" | "buyer",
-  disableAdmin?: boolean
+  disableAdmin?: boolean,
+  onSuccess?: () => void
 }) {
   const [state, formAction, isPending] = useActionState(
     async (prevState: any, formData: FormData) => {
-      return await createUser(formData);
+      const res = await createUser(formData);
+      if (res.success && onSuccess) {
+        onSuccess();
+      }
+      return res;
     },
     null
   );

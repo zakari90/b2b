@@ -1,5 +1,5 @@
 import { auth } from "@/auth";
-import UserForm from "@/components/UserForm";
+import ProvisionUserDialog from "@/components/ProvisionUserDialog";
 import prisma from "@/lib/prisma";
 import { hasPermission } from "@/lib/permissions";
 import { updateUserStatus } from "@/app/actions";
@@ -136,15 +136,7 @@ export default async function UsersPage() {
           </section>
 
           {canCreateUser && (
-            <section className="bg-white p-8 rounded-[2rem] border border-zinc-100 shadow-sm space-y-6">
-              <div className="flex items-center gap-3">
-                <div className="w-10 h-10 bg-blue-50 text-blue-600 rounded-xl flex items-center justify-center">
-                  <UserPlus size={20} />
-                </div>
-                <h3 className="text-xs font-black uppercase tracking-widest text-zinc-900 font-heading">Provision Account</h3>
-              </div>
-              <UserForm disableAdmin={adminCount > 0} />
-            </section>
+            <ProvisionUserDialog disableAdmin={adminCount > 0} />
           )}
         </div>
       </div>

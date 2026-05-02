@@ -80,16 +80,28 @@ export default async function ManagerInventoryPage({
 
         <div className="xl:col-span-4 space-y-6">
           {canCreateItem && (
-            <section className="bg-white p-8 rounded-[2rem] border border-zinc-100 shadow-sm sticky top-24">
-              <div className="flex items-center gap-3 mb-8">
-                <div className="w-10 h-10 bg-indigo-50 text-indigo-600 rounded-xl flex items-center justify-center">
-                  <Plus size={20} />
-                </div>
-                <h3 className="text-xs font-black uppercase tracking-widest text-zinc-900 font-heading">Register Product</h3>
-              </div>
-              <CreateProductSection />
-            </section>
+            <CreateProductSection />
           )}
+          
+          {/* Legend or Quick Tips */}
+          <section className="bg-zinc-900 p-8 rounded-[2rem] text-white shadow-2xl relative overflow-hidden">
+            <div className="absolute top-0 right-0 w-32 h-32 bg-white/5 rounded-bl-full" />
+            <h3 className="text-xs font-black uppercase tracking-widest text-white/40 mb-6">Stock Legend</h3>
+            <div className="space-y-4 relative z-10">
+              <div className="flex items-center gap-3">
+                <div className="w-2 h-2 rounded-full bg-emerald-500" />
+                <p className="text-[10px] font-black uppercase tracking-widest">Healthy (&gt;10 units)</p>
+              </div>
+              <div className="flex items-center gap-3">
+                <div className="w-2 h-2 rounded-full bg-amber-500" />
+                <p className="text-[10px] font-black uppercase tracking-widest">Low Stock (&lt;10 units)</p>
+              </div>
+              <div className="flex items-center gap-3">
+                <div className="w-2 h-2 rounded-full bg-red-500" />
+                <p className="text-[10px] font-black uppercase tracking-widest">Out of Stock</p>
+              </div>
+            </div>
+          </section>
         </div>
       </div>
     </div>

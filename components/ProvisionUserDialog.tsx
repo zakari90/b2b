@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import ProductForm from "./ProductForm";
+import UserForm from "./UserForm";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -10,26 +10,26 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { Plus } from "lucide-react";
+import { UserPlus } from "lucide-react";
 
-export default function CreateProductSection() {
+export default function ProvisionUserDialog({ disableAdmin }: { disableAdmin: boolean }) {
   const [open, setOpen] = useState(false);
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
         <Button className="w-full bg-zinc-950 hover:bg-black text-white rounded-2xl font-black uppercase tracking-widest shadow-xl shadow-zinc-500/20 py-6 group">
-          <Plus size={18} className="mr-2 group-hover:rotate-90 transition-transform" />
-          Add New Product
+          <UserPlus size={18} className="mr-2 group-hover:scale-110 transition-transform" />
+          Provision Account
         </Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[500px] rounded-[2.5rem] border-none shadow-2xl p-0 overflow-hidden">
         <DialogHeader className="p-8 pb-0">
-          <DialogTitle className="text-2xl font-black uppercase tracking-tight font-heading">Register Item</DialogTitle>
-          <p className="text-zinc-500 text-sm font-medium">Enter product details to synchronize with inventory.</p>
+          <DialogTitle className="text-2xl font-black uppercase tracking-tight font-heading">New Identity</DialogTitle>
+          <p className="text-zinc-500 text-sm font-medium">Create a new user profile with specific access roles.</p>
         </DialogHeader>
         <div className="p-8">
-          <ProductForm onSuccess={() => setOpen(false)} />
+          <UserForm disableAdmin={disableAdmin} onSuccess={() => setOpen(false)} />
         </div>
       </DialogContent>
     </Dialog>
