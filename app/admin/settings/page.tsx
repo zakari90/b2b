@@ -1,5 +1,7 @@
 import { deleteAllData } from "@/app/actions";
 
+export const dynamic = "force-dynamic";
+
 export default function SettingsPage() {
   return (
     <div className="space-y-8">
