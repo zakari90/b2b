@@ -392,7 +392,7 @@ export async function placeBulkOrder(cartProducts: { productId: number, quantity
       }
     }
 
-    await prisma.$transaction(async (tx) => {
+    await prisma.$transaction(async (tx: any) => {
       // 1. Create the Order
       await tx.order.create({
         data: {
@@ -400,7 +400,8 @@ export async function placeBulkOrder(cartProducts: { productId: number, quantity
           businessId: user.businessId,
           total,
           products: {
-            create: cartProducts.map(p => ({
+            create: cartProducts.map((p: any) => ({
+
               productId: p.productId,
               quantity: p.quantity,
               price: p.price
