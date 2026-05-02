@@ -304,10 +304,11 @@ export async function getProducts(page: number = 1, pageSize: number = 10, publi
       prisma.product.count({ where })
     ]);
 
-    const products = rawProducts.map(product => ({
+    const products = rawProducts.map((product: any) => ({
       ...product,
       price: product.price.toNumber()
     }));
+
 
     return {
       products,
