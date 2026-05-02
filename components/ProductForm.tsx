@@ -1,6 +1,6 @@
 "use client";
 
-import { useActionState, useEffect, useState } from "react";
+import { useActionState, useEffect, useRef, useState } from "react";
 import { createProduct, updateProduct } from "@/app/actions";
 import { Camera, X } from "lucide-react";
 
@@ -13,6 +13,7 @@ export default function ProductForm({
 }) {
   const [preview, setPreview] = useState<string | null>(initialData?.imageUrl || null);
   const [name, setName] = useState(initialData?.name || "");
+  const fileInputRef = useRef<HTMLInputElement>(null);
   
   const [state, formAction, isPending] = useActionState(
     async (prevState: any, formData: FormData) => {
@@ -43,12 +44,11 @@ export default function ProductForm({
 
   const clearImage = () => {
     setPreview(null);
-    const input = document.getElementById("image-input") as HTMLInputElement;
-    if (input) input.value = "";
+    if (fileInputRef.current) fileInputRef.current.value = "";
   };
 
   return (
-    <section className="bg-white dark:bg-zinc-900 p-6 rounded-2xl border border-zinc-200 shadow-xl max-w-4xl mx-auto">
+    <div>
       <h2 className="text-2xl font-black mb-6 tracking-tight">{initialData ? "Edit Product" : "Add New Product"}</h2>
       
       {state?.error && (
@@ -116,11 +116,11 @@ export default function ProductForm({
           {/* Right Side: Image Upload */}
           <div>
             <label className="block text-xs font-bold uppercase text-zinc-400 mb-1.5 tracking-wider">Product Photo</label>
-            <div className="relative group">
+            <label htmlFor="image-input" className="relative group cursor-pointer block">
               <div 
                 className={`
                   aspect-square rounded-2xl border-2 border-dashed flex flex-col items-center justify-center overflow-hidden transition-all
-                  ${preview ? 'border-zinc-200' : 'border-zinc-300 hover:border-zinc-900 bg-zinc-50'}
+                  ${preview ? 'border-zinc-200' : 'border-zinc-300 hover:border-indigo-400 bg-zinc-50 hover:bg-indigo-50/30'}
                 `}
               >
                 {preview ? (
@@ -128,23 +128,24 @@ export default function ProductForm({
                     <img src={preview} alt="Preview" className="w-full h-full object-cover" />
                     <button 
                       type="button"
-                      onClick={clearImage}
+                      onClick={(e) => { e.preventDefault(); clearImage(); }}
                       className="absolute top-2 right-2 p-1.5 bg-white/90 backdrop-blur rounded-full shadow-lg text-zinc-900 hover:bg-zinc-900 hover:text-white transition-all opacity-0 group-hover:opacity-100"
                     >
                       <X size={16} />
                     </button>
                   </>
                 ) : (
-                  <div className="text-center p-6 cursor-pointer" onClick={() => document.getElementById('image-input')?.click()}>
-                    <div className="w-12 h-12 bg-white rounded-full shadow-sm flex items-center justify-center mx-auto mb-3 text-zinc-400">
+                  <div className="text-center p-6">
+                    <div className="w-12 h-12 bg-white rounded-full shadow-sm flex items-center justify-center mx-auto mb-3 text-zinc-400 group-hover:text-indigo-500 transition-colors">
                       <Camera size={24} />
                     </div>
-                    <p className="text-xs font-bold text-zinc-600">Click to upload photo</p>
+                    <p className="text-xs font-bold text-zinc-600 group-hover:text-indigo-600 transition-colors">Click to upload photo</p>
                     <p className="text-[10px] text-zinc-400 mt-1">PNG, JPG up to 5MB</p>
                   </div>
                 )}
               </div>
               <input 
+                ref={fileInputRef}
                 id="image-input"
                 name="image" 
                 type="file" 
@@ -152,7 +153,7 @@ export default function ProductForm({
                 onChange={handleImageChange}
                 className="hidden"
               />
-            </div>
+            </label>
           </div>
         </div>
 
@@ -175,7 +176,7 @@ export default function ProductForm({
           )}
         </div>
       </form>
-    </section>
+    </div>
   );
 }
 
