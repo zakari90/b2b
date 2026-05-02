@@ -1,0 +1,129 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+}
+
+
+//////////////////////
+// ENUMS
+//////////////////////
+
+enum OrderStatus {
+  PENDING
+  PROCESSING
+  SHIPPED
+  COMPLETED
+  CANCELLED
+}
+
+enum userStatus {
+  ACTIVE
+  INACTIVE
+  PENDING
+}
+
+enum roles {
+  admin
+  saller
+  buyer
+}
+
+//////////////////////
+// CORE MODELS
+//////////////////////
+
+model Business {
+  id        Int      @id @default(autoincrement())
+  name      String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  users     User[]
+  products  Product[]
+  orders    Order[]
+
+  @@index([name])
+}
+
+model User {
+  id          Int      @id @default(autoincrement())
+  email       String   @unique
+  username    String   @unique
+  password    String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  businessId  Int
+  business    Business @relation(fields: [businessId], references: [id], onDelete: Cascade)
+
+  role        roles      @default(buyer)
+  status      userStatus @default(PENDING)
+  orders      Order[]
+
+  @@index([businessId])
+}
+
+//////////////////////
+// INVENTORY
+//////////////////////
+
+model Product {
+  id         Int      @id @default(autoincrement())
+  name       String
+  price      Decimal  @db.Decimal(10, 2)
+  quantity   Int      @default(0)
+  publisher  String?
+  imageUrl   String?
+
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  businessId Int
+  business   Business @relation(fields: [businessId], references: [id], onDelete: Cascade)
+
+  orderProducts OrderProduct[]
+
+  @@index([businessId])
+}
+
+//////////////////////
+// ORDERS
+//////////////////////
+
+model Order {
+  id         Int          @id @default(autoincrement())
+  status     OrderStatus  @default(PENDING)
+  total      Decimal      @db.Decimal(10, 2)
+
+  createdAt  DateTime     @default(now())
+  updatedAt  DateTime     @updatedAt
+
+  businessId Int
+  business   Business     @relation(fields: [businessId], references: [id], onDelete: Cascade)
+
+  userId     Int
+  user       User         @relation(fields: [userId], references: [id])
+
+  products   OrderProduct[]
+
+  @@index([businessId])
+  @@index([userId])
+}
+
+model OrderProduct {
+  id        Int     @id @default(autoincrement())
+  quantity  Int
+  price     Decimal @db.Decimal(10, 2) // price at purchase time
+
+  orderId   Int
+  productId Int
+
+  order   Order   @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  product Product @relation(fields: [productId], references: [id])
+
+  @@index([orderId])
+  @@index([productId])
+}
