@@ -4,6 +4,8 @@ import CreateProductSection from "@/components/CreateProductSection";
 import { hasPermission } from "@/lib/permissions";
 import { redirect } from "next/navigation";
 
+export const dynamic = "force-dynamic";
+
 export default async function ManagerDashboard() {
   const session = await auth();
   if (!session) redirect("/");

@@ -4,6 +4,8 @@ import prisma from "@/lib/prisma";
 import { hasPermission } from "@/lib/permissions";
 import { updateUserStatus } from "@/app/actions";
 
+export const dynamic = "force-dynamic";
+
 export default async function UsersPage() {
   const session = await auth();
   const canViewUsers = await hasPermission("view_users");

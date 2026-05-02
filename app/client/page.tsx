@@ -6,6 +6,8 @@ import { getProducts } from "@/app/actions";
 import AddToCartButton from "@/components/AddToCartButton";
 import CartDrawer from "@/components/CartDrawer";
 
+export const dynamic = "force-dynamic";
+
 export default async function ClientPage({ 
   searchParams 
 }: { 
