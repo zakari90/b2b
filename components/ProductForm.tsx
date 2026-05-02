@@ -34,6 +34,11 @@ export default function ProductForm({
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
+      if (file.size > 2 * 1024 * 1024) {
+        alert("Image size must be less than 2MB");
+        if (fileInputRef.current) fileInputRef.current.value = "";
+        return;
+      }
       const reader = new FileReader();
       reader.onloadend = () => {
         setPreview(reader.result as string);
@@ -140,7 +145,7 @@ export default function ProductForm({
                       <Camera size={24} />
                     </div>
                     <p className="text-xs font-bold text-zinc-600 group-hover:text-indigo-600 transition-colors">Click to upload photo</p>
-                    <p className="text-[10px] text-zinc-400 mt-1">PNG, JPG up to 5MB</p>
+                    <p className="text-[10px] text-zinc-400 mt-1">PNG, JPG up to 2MB</p>
                   </div>
                 )}
               </div>
