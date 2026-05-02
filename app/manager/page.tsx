@@ -39,7 +39,8 @@ export default async function ManagerDashboard() {
     select: { total: true }
   });
 
-  const totalRevenue = completedOrders.reduce((sum, order) => sum + Number(order.total), 0);
+  const totalRevenue = completedOrders.reduce((sum: any, order: any) => sum + Number(order.total), 0);
+
 
   const recentProducts = await prisma.product.findMany({
     where: {
@@ -101,7 +102,8 @@ export default async function ManagerDashboard() {
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-zinc-50 dark:divide-zinc-800/50">
-                  {recentProducts.map(product => (
+                  {recentProducts.map((product: any) => (
+
                     <tr key={product.id}>
                       <td className="py-4 font-medium text-sm">{product.name}</td>
                       <td className="py-4 text-right text-sm text-zinc-500">${Number(product.price).toFixed(2)}</td>
