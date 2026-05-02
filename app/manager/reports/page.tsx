@@ -1,5 +1,7 @@
 import { hasPermission } from "@/lib/permissions";
 
+export const dynamic = "force-dynamic";
+
 export default async function ManagerReportsPage() {
   const canViewReports = await hasPermission("view_reports");
 

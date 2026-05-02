@@ -4,6 +4,8 @@ import { hasPermission } from "@/lib/permissions";
 import { getProducts } from "@/app/actions";
 import { auth } from "@/auth";
 
+export const dynamic = "force-dynamic";
+
 export default async function ManagerInventoryPage({ 
   searchParams 
 }: { 
