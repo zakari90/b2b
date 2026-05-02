@@ -54,7 +54,8 @@ export default function ProductList({
                 </TableCell>
               </TableRow>
             )}
-            {products.map((product) => (
+            {products.map((product: any) => (
+
               <TableRow key={product.id}>
                 <TableCell className="font-medium">
                   <div className="flex items-center gap-3">

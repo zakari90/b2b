@@ -125,7 +125,8 @@ export default async function Home() {
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
-          {featuredProducts.map((product) => (
+          {featuredProducts.map((product: any) => (
+
             <div key={product.id} className="group cursor-pointer">
               <div className="aspect-square bg-zinc-100 rounded-2xl mb-4 overflow-hidden flex items-center justify-center text-zinc-300 transition-all group-hover:scale-[1.02] relative border">
                 {product.imageUrl ? (
