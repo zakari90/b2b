@@ -53,7 +53,7 @@ export default async function ManagerOrdersPage() {
                 <div className="space-y-1">
                   <div className="flex items-center gap-2">
                     <span className="text-xs font-black uppercase text-zinc-400">
-                      Order #{order.id}
+                      Order N#{order.id}
                     </span>
                     <span
                       className={`px-2 py-0.5 rounded-full text-[10px] font-black uppercase tracking-widest ${
