@@ -53,7 +53,7 @@ export default async function AdminLayout({
   return (
     <div className="flex min-h-screen flex-col lg:flex-row bg-zinc-50 dark:bg-zinc-950">
       <MobileNav items={adminNavItems} title="Admin Panel" badge="B2B" badgeColor="bg-zinc-900" />
-      <AdminSidebar />
+      <AdminSidebar user={session.user} />
       <main className="flex-1 p-4 md:p-8 overflow-auto">
         <div className="max-w-6xl mx-auto">
           {children}

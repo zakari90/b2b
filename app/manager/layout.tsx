@@ -35,7 +35,7 @@ export default async function ManagerLayout({
   return (
     <div className="flex min-h-screen flex-col lg:flex-row bg-zinc-50 dark:bg-zinc-950">
       <MobileNav items={managerNavItems} title="Manager Portal" badge="MGR" badgeColor="bg-blue-600" />
-      <ManagerSidebar />
+      <ManagerSidebar user={session.user} />
       <main className="flex-1 p-4 md:p-8 overflow-auto">
         <div className="max-w-6xl mx-auto">
           {children}

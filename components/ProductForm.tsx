@@ -12,6 +12,7 @@ export default function ProductForm({
   onSuccess?: () => void 
 }) {
   const [preview, setPreview] = useState<string | null>(initialData?.imageUrl || null);
+  const [name, setName] = useState(initialData?.name || "");
   
   const [state, formAction, isPending] = useActionState(
     async (prevState: any, formData: FormData) => {
@@ -67,14 +68,21 @@ export default function ProductForm({
           {/* Left Side: Basic Info */}
           <div className="space-y-4">
             <div>
-              <label className="block text-xs font-bold uppercase text-zinc-400 mb-1.5 tracking-wider">Product Name</label>
+              <div className="flex justify-between items-end mb-1.5 px-1">
+                <label className="block text-xs font-black uppercase text-zinc-400 tracking-widest">Product Name</label>
+                <span className="text-[10px] font-black text-zinc-300 uppercase tracking-widest">
+                  {name.length}/100
+                </span>
+              </div>
               <input 
                 name="name" 
                 type="text" 
                 required 
-                defaultValue={initialData?.name}
-                className="w-full bg-zinc-50 border-none rounded-xl p-3 text-sm focus:ring-2 focus:ring-zinc-900 outline-none transition-all" 
-                placeholder="e.g. Industrial Processor" 
+                maxLength={100}
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                className="w-full bg-zinc-50 border border-zinc-100 rounded-xl p-4 text-sm font-medium focus:ring-2 focus:ring-indigo-600 focus:bg-white outline-none transition-all shadow-sm" 
+                placeholder="e.g. Industrial Processor X1" 
               />
             </div>
             

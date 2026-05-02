@@ -2,15 +2,15 @@ import type { Metadata, Viewport } from "next";
 import "./globals.css";
 import { CartProvider } from "@/context/CartContext";
 import Script from "next/script";
-import { Noto_Sans, Roboto } from "next/font/google";
+import { Inter, Outfit } from "next/font/google";
 import { cn } from "@/lib/utils";
 
-const robotoHeading = Roboto({
+const outfitHeading = Outfit({
   subsets: ["latin"],
   variable: "--font-heading",
 });
 
-const notoSans = Noto_Sans({ subsets: ["latin"], variable: "--font-sans" });
+const interSans = Inter({ subsets: ["latin"], variable: "--font-sans" });
 
 export const metadata: Metadata = {
   title: "B2B Storefront",
@@ -44,8 +44,8 @@ export default function RootLayout({
       className={cn(
         "h-full antialiased",
         "font-sans",
-        notoSans.variable,
-        robotoHeading.variable,
+        interSans.variable,
+        outfitHeading.variable,
       )}
     >
       <head>

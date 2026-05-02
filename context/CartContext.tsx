@@ -8,6 +8,7 @@ export interface CartProduct {
   price: number;
   quantity: number;
   publisher?: string;
+  imageUrl?: string | null;
 }
 
 interface CartContextType {

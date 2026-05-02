@@ -3,6 +3,8 @@ import ProductList from "@/components/ProductList";
 import { hasPermission } from "@/lib/permissions";
 import { getProducts } from "@/app/actions";
 import { auth } from "@/auth";
+import { Package, Plus, BarChart3 } from "lucide-react";
+import { cn } from "@/lib/utils";
 
 export const dynamic = "force-dynamic";
 
@@ -24,46 +26,67 @@ export default async function ManagerInventoryPage({
     ? await getProducts(page, 10) 
     : { products: [], totalPages: 0, total: 0 };
 
+  const lowStockCount = products.filter((p: any) => p.quantity < 10).length;
+
   return (
-    <div className="space-y-8">
-      <div>
-        <h1 className="text-3xl font-bold text-zinc-900 dark:text-zinc-50">Manager Inventory</h1>
-        <p className="text-zinc-500 mt-1">Manage products and stock levels.</p>
+    <div className="space-y-12">
+      <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+        <div className="space-y-1">
+          <h1 className="text-4xl font-black text-zinc-900 font-heading tracking-tight">Stock Terminal</h1>
+          <p className="text-zinc-500 font-medium">Synchronize physical inventory with the digital storefront.</p>
+        </div>
       </div>
 
-      <div className="grid grid-cols-1 xl:grid-cols-4 gap-8">
-        <div className="xl:col-span-3">
+      <div className="grid grid-cols-1 xl:grid-cols-12 gap-8">
+        <div className="xl:col-span-8 space-y-8">
+          {/* Summary Stats Strip */}
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+            <div className="bg-white p-6 rounded-3xl border border-zinc-100 shadow-sm">
+              <p className="text-[10px] font-black uppercase tracking-widest text-zinc-400 mb-1">Total SKU</p>
+              <p className="text-2xl font-black text-zinc-900">{total}</p>
+            </div>
+            <div className="bg-white p-6 rounded-3xl border border-zinc-100 shadow-sm">
+              <p className="text-[10px] font-black uppercase tracking-widest text-amber-500 mb-1">Critical Stock</p>
+              <p className="text-2xl font-black text-zinc-900">{lowStockCount}</p>
+            </div>
+          </div>
+
           {canViewItems ? (
-            <section className="bg-white dark:bg-zinc-900 rounded-2xl border border-zinc-200 dark:border-zinc-800 shadow-sm overflow-hidden">
-              <div className="p-6 border-b border-zinc-100 dark:border-zinc-800 flex justify-between items-center">
-                 <h2 className="text-xl font-bold flex items-center gap-2">
-                  <span className="w-2 h-6 bg-blue-500 rounded-full"></span>
-                  Product List
-                </h2>
-                <span className="text-sm text-zinc-500 font-medium">{total} products</span>
+            <section className="bg-white rounded-[2.5rem] border border-zinc-100 shadow-sm overflow-hidden">
+              <div className="p-8 border-b border-zinc-50 flex justify-between items-center">
+                 <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 bg-blue-50 text-blue-600 rounded-xl flex items-center justify-center">
+                    <Package size={20} />
+                  </div>
+                  <h2 className="text-lg font-black uppercase tracking-widest font-heading">Inventory Database</h2>
+                </div>
               </div>
-              <ProductList 
-                products={products} 
-                canDelete={canDeleteItem} 
-                canEdit={canEditItem} 
-                currentPage={page}
-                totalPages={totalPages}
-              />
+              <div className="p-2">
+                <ProductList 
+                  products={products} 
+                  canDelete={canDeleteItem} 
+                  canEdit={canEditItem} 
+                  currentPage={page}
+                  totalPages={totalPages}
+                />
+              </div>
             </section>
           ) : (
-            <div className="p-12 text-center bg-zinc-100 dark:bg-zinc-900 rounded-2xl border border-dashed border-zinc-200 dark:border-zinc-800 text-zinc-500">
-              You don't have permission to view products.
+            <div className="p-12 text-center bg-white rounded-[2.5rem] border border-dashed border-zinc-200 text-zinc-400">
+              Inventory logs restricted. Contact system owner.
             </div>
           )}
         </div>
 
-        <div className="space-y-6">
+        <div className="xl:col-span-4 space-y-6">
           {canCreateItem && (
-            <section className="bg-white dark:bg-zinc-900 p-6 rounded-2xl border border-zinc-200 dark:border-zinc-800 shadow-sm sticky top-24">
-              <h2 className="text-xl font-bold mb-6 flex items-center gap-2">
-                <span className="w-2 h-6 bg-orange-500 rounded-full"></span>
-                Add Product
-              </h2>
+            <section className="bg-white p-8 rounded-[2rem] border border-zinc-100 shadow-sm sticky top-24">
+              <div className="flex items-center gap-3 mb-8">
+                <div className="w-10 h-10 bg-indigo-50 text-indigo-600 rounded-xl flex items-center justify-center">
+                  <Plus size={20} />
+                </div>
+                <h3 className="text-xs font-black uppercase tracking-widest text-zinc-900 font-heading">Register Product</h3>
+              </div>
               <CreateProductSection />
             </section>
           )}
