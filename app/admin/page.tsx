@@ -109,7 +109,7 @@ export default async function AdminDashboard() {
                 </div>
                 <div className={cn(
                   "px-3 py-1 rounded-full text-[9px] font-black uppercase tracking-widest",
-                  u.status === 'APPROVED' ? "bg-emerald-100 text-emerald-600" : "bg-amber-100 text-amber-600"
+                  u.status === 'ACTIVE' ? "bg-emerald-100 text-emerald-600" : "bg-amber-100 text-amber-600"
                 )}>
                   {u.status}
                 </div>
