@@ -59,7 +59,8 @@ export default async function ClientPage({
           <section className="lg:col-span-2 space-y-6">
             <h2 className="text-2xl font-bold">Product Catalog</h2>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              {products.map(product => (
+              {products.map((product: any) => (
+
                 <div key={product.id} className="p-6 bg-white rounded-2xl border shadow-sm flex justify-between items-center">
                   <div>
                     <h3 className="font-bold text-lg">{product.name}</h3>
@@ -97,14 +98,16 @@ export default async function ClientPage({
             <h2 className="text-2xl font-bold">My Orders</h2>
             <div className="space-y-4">
               {user.orders.length === 0 && <p className="text-zinc-400 italic">No orders yet.</p>}
-              {user.orders.map(order => (
+              {user.orders.map((order: any) => (
+
                 <div key={order.id} className="p-4 bg-white rounded-xl border border-zinc-100 shadow-sm space-y-2">
                   <div className="flex justify-between text-xs font-bold uppercase text-zinc-400">
                     <span>Order #{order.id}</span>
                     <span>{new Date(order.createdAt).toLocaleDateString()}</span>
                   </div>
                   <div className="text-sm">
-                    {order.products.map(op => (
+                    {order.products.map((op: any) => (
+
                       <div key={op.id} className="flex justify-between">
                         <span>{op.quantity}x {op.product.name}</span>
                         <span className="font-medium">${(Number(op.price) * op.quantity).toFixed(2)}</span>

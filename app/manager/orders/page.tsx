@@ -40,7 +40,8 @@ export default async function ManagerOrdersPage() {
             No orders found.
           </div>
         ) : (
-          orders.map((order) => (
+          orders.map((order: any) => (
+
             <div key={order.id} className="bg-white dark:bg-zinc-900 p-8 rounded-3xl border border-zinc-200 dark:border-zinc-800 shadow-sm space-y-6">
               <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
                 <div className="space-y-1">
@@ -99,7 +100,8 @@ export default async function ManagerOrdersPage() {
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-zinc-50 dark:divide-zinc-800/50">
-                    {order.products.map((op) => (
+                    {order.products.map((op: any) => (
+
                       <tr key={op.id}>
                         <td className="py-3 font-medium">{op.product.name}</td>
                         <td className="py-3 text-right text-zinc-500">{op.quantity}</td>
