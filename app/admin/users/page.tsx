@@ -43,7 +43,8 @@ export default async function UsersPage() {
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-zinc-50 dark:divide-zinc-800/50">
-                    {users.map(u => (
+                    {users.map((u: any) => (
+
                       <tr key={u.id} className="group hover:bg-zinc-50 dark:hover:bg-zinc-800/30 transition-colors">
                         <td className="py-4 font-medium text-zinc-900 dark:text-zinc-100">{u.username}</td>
                         <td className="py-4 text-zinc-500 text-sm">{u.email}</td>
