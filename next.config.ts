@@ -14,6 +14,4 @@ const nextConfig: NextConfig = {
   },
 };
 
-// Only apply Serwist if we are not using Turbopack, as Turbopack 
-// does not yet support custom webpack configurations used for service workers.
-export default process.env.TURBOPACK ? nextConfig : withSerwist(nextConfig);
+export default withSerwist(nextConfig);
