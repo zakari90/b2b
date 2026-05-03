@@ -8,7 +8,7 @@ import { cn } from "@/lib/utils";
 
 export const dynamic = "force-dynamic";
 
-export default async function ManagerInventoryPage({ 
+export default async function SellerInventoryPage({ 
   searchParams 
 }: { 
   searchParams: Promise<{ page?: string }> 

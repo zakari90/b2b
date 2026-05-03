@@ -53,8 +53,8 @@ export default async function Home() {
                     (session.user as any).role === "admin"
                       ? "/admin"
                       : (session.user as any).role === "saller"
-                        ? "/manager"
-                        : "/client"
+                        ? "/seller"
+                        : "/buyer"
                   }
                   className="text-sm font-bold bg-zinc-900 text-white px-4 py-2 rounded-full"
                 >
@@ -140,7 +140,7 @@ export default async function Home() {
             </p>
           </div>
           <Link
-            href="/client"
+            href="/buyer"
             className="text-sm font-bold underline text-blue-600"
           >
             View Catalog
@@ -176,7 +176,7 @@ export default async function Home() {
                 {/* Hover Overlay */}
                 <div className="absolute inset-0 bg-zinc-950/40 backdrop-blur-sm opacity-0 group-hover:opacity-100 transition-all duration-300 flex items-center justify-center p-6">
                   <Link
-                    href="/client"
+                    href="/buyer"
                     className="w-full bg-white text-zinc-900 py-3 rounded-xl text-center block text-sm font-black shadow-2xl transform translate-y-4 group-hover:translate-y-0 transition-all duration-500"
                   >
                     View Details
@@ -251,7 +251,7 @@ export default async function Home() {
             <ul className="space-y-4 text-sm text-zinc-500 font-bold">
               <li><Link href="#shop" className="hover:text-indigo-600 transition-colors">Catalog</Link></li>
               <li><Link href="#auth" className="hover:text-indigo-600 transition-colors">Register</Link></li>
-              <li><Link href="/client" className="hover:text-indigo-600 transition-colors">My Orders</Link></li>
+              <li><Link href="/buyer" className="hover:text-indigo-600 transition-colors">My Orders</Link></li>
             </ul>
           </div>
 

@@ -17,7 +17,7 @@ import { cn } from "@/lib/utils";
 
 export const dynamic = "force-dynamic";
 
-export default async function ManagerRequestsPage() {
+export default async function SellerRequestsPage() {
   const session = await auth();
   if (!session) redirect("/");
 

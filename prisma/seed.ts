@@ -31,11 +31,11 @@ async function main() {
     },
   });
 
-  // Create a Saller (Manager) user
+  // Create a Seller user
   await prisma.user.create({
     data: {
-      email: "manager@example.com",
-      username: "manager",
+      email: "seller@example.com",
+      username: "seller",
       password: hashedPassword,
       businessId,
       role: "saller",
@@ -43,11 +43,11 @@ async function main() {
     },
   });
 
-  // Create a Buyer (Client) user
+  // Create a Buyer user
   await prisma.user.create({
     data: {
-      email: "client@example.com",
-      username: "client",
+      email: "buyer@example.com",
+      username: "buyer",
       password: hashedPassword,
       businessId,
       role: "buyer",
@@ -59,7 +59,7 @@ async function main() {
   await prisma.product.createMany({
     data: [
       { name: "Industrial Processor", price: 299.99, quantity: 50, publisher: "admin", businessId },
-      { name: "Thermal Sensor", price: 45.50, quantity: 200, publisher: "manager", businessId },
+      { name: "Thermal Sensor", price: 45.50, quantity: 200, publisher: "seller", businessId },
       { name: "Wireless Module", price: 12.00, quantity: 500, publisher: "admin", businessId },
     ]
   });

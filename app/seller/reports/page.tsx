@@ -2,7 +2,7 @@ import { hasPermission } from "@/lib/permissions";
 
 export const dynamic = "force-dynamic";
 
-export default async function ManagerReportsPage() {
+export default async function SellerReportsPage() {
   const canViewReports = await hasPermission("view_reports");
 
   return (
@@ -22,7 +22,7 @@ export default async function ManagerReportsPage() {
           />
           <ReportCard 
             title="User Activity" 
-            description="Analyze how clients interact with the site." 
+            description="Analyze how buyers interact with the site." 
             icon="👥" 
             status="Stable"
           />

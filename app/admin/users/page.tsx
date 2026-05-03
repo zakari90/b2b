@@ -79,7 +79,7 @@ export default async function UsersPage() {
                             u.role === 'admin' ? "bg-zinc-100 text-zinc-600" : 
                             u.role === 'saller' ? "bg-indigo-50 text-indigo-600" : "bg-blue-50 text-blue-600"
                           )}>
-                            {u.role === 'saller' ? 'MANAGER' : u.role.toUpperCase()}
+                            {u.role === 'saller' ? 'SELLER' : u.role.toUpperCase()}
                           </span>
                         </td>
                         <td className="py-5">

@@ -2,19 +2,19 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { logout } from "@/app/actions";
-import { managerNavItems } from "@/lib/navigation";
+import { sellerNavItems } from "@/lib/navigation";
 import { LogOut, Globe, ChevronRight } from "lucide-react";
 import { cn } from "@/lib/utils";
 
-export default function ManagerSidebar({ user }: { user: any }) {
+export default function SellerSidebar({ user }: { user: any }) {
   const pathname = usePathname();
 
   return (
     <aside className="hidden lg:flex w-72 bg-white border-r border-zinc-100 flex-col h-screen sticky top-0">
       <div className="p-8">
-        <Link href="/manager" className="flex items-center gap-3 group">
+        <Link href="/seller" className="flex items-center gap-3 group">
           <div className="bg-blue-600 text-white w-10 h-10 flex items-center justify-center rounded-xl text-xs font-black shadow-xl shadow-blue-500/20 group-hover:scale-110 transition-transform">
-            MGR
+            SLR
           </div>
           <div>
             <h2 className="text-sm font-black text-zinc-900 uppercase tracking-widest leading-none">Terminal</h2>
@@ -24,7 +24,7 @@ export default function ManagerSidebar({ user }: { user: any }) {
       </div>
 
       <nav className="flex-1 px-4 space-y-1">
-        {managerNavItems.map((item) => {
+        {sellerNavItems.map((item) => {
           const isActive = pathname === item.href;
           return (
             <Link
@@ -56,7 +56,7 @@ export default function ManagerSidebar({ user }: { user: any }) {
             {user?.username?.[0]?.toUpperCase() || "M"}
           </div>
           <div className="flex-1 min-w-0">
-            <p className="text-xs font-black text-zinc-900 truncate uppercase tracking-widest">{user?.username || "Manager"}</p>
+            <p className="text-xs font-black text-zinc-900 truncate uppercase tracking-widest">{user?.username || "Seller"}</p>
             <p className="text-[9px] font-bold text-zinc-400 uppercase tracking-widest">{user?.role || "Operator"}</p>
           </div>
         </div>

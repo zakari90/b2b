@@ -10,7 +10,7 @@ import { cn } from "@/lib/utils";
 
 export const dynamic = "force-dynamic";
 
-export default async function ClientPage({ 
+export default async function BuyerPage({ 
   searchParams 
 }: { 
   searchParams: Promise<{ page?: string }> 
@@ -42,7 +42,7 @@ export default async function ClientPage({
           <AlertCircle size={40} />
         </div>
         <h1 className="text-4xl font-black font-heading text-zinc-900 uppercase tracking-tighter">Access Denied</h1>
-        <p className="mt-4 text-zinc-500 font-medium max-w-sm">This secure portal is restricted to authorized clients only.</p>
+        <p className="mt-4 text-zinc-500 font-medium max-w-sm">This secure portal is restricted to authorized buyers only.</p>
         <Link href="/" className="mt-8 inline-flex items-center gap-2 bg-zinc-900 text-white px-8 py-3 rounded-full font-black uppercase tracking-widest text-xs shadow-xl hover:scale-105 transition-all">
           Back to Home
         </Link>
@@ -74,7 +74,7 @@ export default async function ClientPage({
             <div className="space-y-2">
               <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/10 border border-white/10 text-white/60 text-[10px] font-black uppercase tracking-widest">
                 <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" />
-                Secure Client Portal
+                Secure Buyer Portal
               </div>
               <h1 className="text-4xl md:text-5xl font-black text-white font-heading tracking-tight">
                 Welcome back, <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-indigo-300">{user.username}</span>

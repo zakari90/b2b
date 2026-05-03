@@ -7,7 +7,7 @@ import UserForm from "@/components/UserForm";
 import { cn } from "@/lib/utils";
 
 export default function AuthHub() {
-  const [activeTab, setActiveTab] = useState<"signin" | "client" | "manager">("signin");
+  const [activeTab, setActiveTab] = useState<"signin" | "buyer" | "seller">("signin");
 
   return (
     <div className="w-full max-w-2xl mx-auto space-y-8">
@@ -25,26 +25,26 @@ export default function AuthHub() {
           Sign In
         </button>
         <button
-          onClick={() => setActiveTab("client")}
+          onClick={() => setActiveTab("buyer")}
           className={cn(
             "flex-1 py-3 text-sm font-black uppercase tracking-widest rounded-xl transition-all",
-            activeTab === "client" 
+            activeTab === "buyer" 
               ? "bg-white text-blue-600 shadow-lg" 
               : "text-zinc-500 hover:text-zinc-800"
           )}
         >
-          Client
+          Buyer
         </button>
         <button
-          onClick={() => setActiveTab("manager")}
+          onClick={() => setActiveTab("seller")}
           className={cn(
             "flex-1 py-3 text-sm font-black uppercase tracking-widest rounded-xl transition-all",
-            activeTab === "manager" 
+            activeTab === "seller" 
               ? "bg-white text-indigo-600 shadow-lg" 
               : "text-zinc-500 hover:text-zinc-800"
           )}
         >
-          Manager
+          Seller
         </button>
       </div>
 
@@ -54,19 +54,19 @@ export default function AuthHub() {
         <CardHeader className="space-y-1 pb-2">
           <CardTitle className="text-3xl font-black font-heading text-zinc-900">
             {activeTab === "signin" && "Welcome Back"}
-            {activeTab === "client" && "Create Client Account"}
-            {activeTab === "manager" && "Register as Manager"}
+            {activeTab === "buyer" && "Create Buyer Account"}
+            {activeTab === "seller" && "Register as Seller"}
           </CardTitle>
           <CardDescription className="text-zinc-500 font-medium">
             {activeTab === "signin" && "Enter your credentials to access your portal"}
-            {activeTab === "client" && "Join our platform to browse and order inventory"}
-            {activeTab === "manager" && "Manage products and process business orders"}
+            {activeTab === "buyer" && "Join our platform to browse and order inventory"}
+            {activeTab === "seller" && "Manage products and process business orders"}
           </CardDescription>
         </CardHeader>
         <CardContent className="pt-6">
           {activeTab === "signin" && <LoginForm />}
-          {activeTab === "client" && <UserForm fixedRole="buyer" />}
-          {activeTab === "manager" && <UserForm fixedRole="saller" />}
+          {activeTab === "buyer" && <UserForm fixedRole="buyer" />}
+          {activeTab === "seller" && <UserForm fixedRole="saller" />}
         </CardContent>
       </Card>
     </div>

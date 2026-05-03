@@ -6,7 +6,7 @@ import { redirect } from "next/navigation";
 
 export const dynamic = "force-dynamic";
 
-export default async function ManagerDashboard() {
+export default async function SellerDashboard() {
   const session = await auth();
   if (!session) redirect("/");
 
@@ -59,25 +59,25 @@ export default async function ManagerDashboard() {
     <div className="space-y-10">
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
-          <h1 className="text-4xl font-bold text-zinc-900 dark:text-zinc-50 tracking-tight">Manager Dashboard</h1>
+          <h1 className="text-4xl font-bold text-zinc-900 dark:text-zinc-50 tracking-tight">Seller Dashboard</h1>
           <p className="text-zinc-500 mt-2 text-lg">Welcome, {session.user?.name}. Here's your business overview.</p>
         </div>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        <ManagerStatCard 
+        <SellerStatCard 
           title="Total Products" 
           value={productCount} 
           icon="📦" 
           color="bg-blue-500" 
         />
-        <ManagerStatCard 
+        <SellerStatCard 
           title="Pending Orders" 
           value={pendingOrders} 
           icon="⏳" 
           color="bg-orange-500" 
         />
-        <ManagerStatCard 
+        <SellerStatCard 
           title="Total Revenue" 
           value={`$${totalRevenue.toFixed(2)}`} 
           icon="📈" 
@@ -92,7 +92,7 @@ export default async function ManagerDashboard() {
               <h2 className="text-xl font-bold flex items-center gap-2">
                 Recent Products
               </h2>
-              <a href="/manager/inventory" className="text-sm text-blue-600 hover:underline font-medium">View All</a>
+              <a href="/seller/inventory" className="text-sm text-blue-600 hover:underline font-medium">View All</a>
             </div>
             <div className="overflow-hidden">
               <table className="w-full text-left">
@@ -156,7 +156,7 @@ export default async function ManagerDashboard() {
   );
 }
 
-function ManagerStatCard({ title, value, icon, color }: { title: string, value: any, icon: string, color: string }) {
+function SellerStatCard({ title, value, icon, color }: { title: string, value: any, icon: string, color: string }) {
   return (
     <div className="bg-white dark:bg-zinc-900 p-8 rounded-3xl border border-zinc-200 dark:border-zinc-800 shadow-sm relative overflow-hidden group">
       <div className={`absolute top-0 right-0 w-24 h-24 ${color} opacity-[0.05] rounded-bl-full`}></div>

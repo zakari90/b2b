@@ -86,7 +86,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
             "view_items",
           ];
         } else if (user.role === "buyer") {
-          permissions = ["view_dashboard", "edit_profile", "view_items"];
+          permissions = ["view_dashboard", "edit_profile", "view_items", "create_order"];
         }
 
         return {

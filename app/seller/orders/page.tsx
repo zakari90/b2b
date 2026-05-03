@@ -7,7 +7,7 @@ import { cn } from "@/lib/utils";
 
 export const dynamic = "force-dynamic";
 
-export default async function ManagerOrdersPage() {
+export default async function SellerOrdersPage() {
   const session = await auth();
   if (!session) redirect("/");
 
@@ -78,7 +78,7 @@ export default async function ManagerOrdersPage() {
                             <h3 className="font-black text-xl text-zinc-900 leading-none mb-2">{order.user.username}</h3>
                             <div className="flex items-center gap-2 text-zinc-400">
                               <Building2 size={12} />
-                              <span className="text-[10px] font-black uppercase tracking-widest">{order.user.business?.name || "Independent Client"}</span>
+                              <span className="text-[10px] font-black uppercase tracking-widest">{order.user.business?.name || "Independent Buyer"}</span>
                             </div>
                           </div>
                         </div>

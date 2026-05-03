@@ -148,8 +148,8 @@ export default function UserForm({
                 name="role" 
                 className="flex h-12 w-full rounded-xl border border-zinc-200 bg-zinc-50 px-4 py-2 text-sm font-bold focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-600 transition-all"
               >
-                <option value="buyer">Client / Buyer</option>
-                <option value="saller">Manager / Seller</option>
+                <option value="buyer">Buyer</option>
+                <option value="saller">Seller</option>
                 {!disableAdmin && <option value="admin">Administrator</option>}
               </select>
             </div>

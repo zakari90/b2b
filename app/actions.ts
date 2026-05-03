@@ -281,15 +281,16 @@ export async function getProducts(page: number = 1, pageSize: number = 10, publi
 
   const skip = (page - 1) * pageSize;
   const isAdmin = session?.user?.role === "admin";
+  const isSeller = session?.user?.role === "saller";
+  const isBuyer = session?.user?.role === "buyer";
   const userPublisher = session?.user?.name || "";
 
   const where: any = { businessId };
   
-  // If not admin, strictly filter by publisher (their own name)
-  if (!isAdmin) {
+  // Sellers only see their own products. Admins and Buyers see everything in the business.
+  if (isSeller) {
     where.publisher = userPublisher;
-  } else if (publisher) {
-    // Admins can optionally filter by publisher if they want
+  } else if (isAdmin && publisher) {
     where.publisher = publisher;
   }
   
@@ -372,6 +373,7 @@ export async function placeOrder(productId: number, quantity: number) {
 
 export async function placeBulkOrder(cartProducts: { productId: number, quantity: number, price: number }[]) {
   try {
+    console.log("[placeBulkOrder] Starting checkout for", cartProducts.length, "items");
     const session = await auth();
     if (!session?.user?.email) return { error: "You must be logged in to place an order." };
 
@@ -380,50 +382,74 @@ export async function placeBulkOrder(cartProducts: { productId: number, quantity
     });
     if (!user) return { error: "User profile not found." };
 
-    // Calculate total
-    const total = cartProducts.reduce((sum, product) => sum + (product.price * product.quantity), 0);
+    // Fetch latest product data to ensure availability and correct prices
+    const productIds = cartProducts.map(p => p.productId);
+    const dbProducts = await prisma.product.findMany({
+      where: { id: { in: productIds } }
+    });
 
-    // Validate all products exist and have enough stock
-    for (const p of cartProducts) {
-      const dbProduct = await prisma.product.findUnique({ where: { id: p.productId } });
-      if (!dbProduct) return { error: `Product ${p.productId} not found.` };
-      if (dbProduct.quantity < p.quantity) {
-        return { error: `Only ${dbProduct.quantity} units available for ${dbProduct.name}.` };
+    // Validate and calculate total using DB prices for security
+    let total = 0;
+    const validatedItems = [];
+
+    for (const cartItem of cartProducts) {
+      const dbProduct = dbProducts.find(p => p.id === cartItem.productId);
+      if (!dbProduct) return { error: `Product not found.` };
+      
+      if (dbProduct.quantity < cartItem.quantity) {
+        return { error: `Insufficient stock for ${dbProduct.name}. Only ${dbProduct.quantity} left.` };
       }
+
+      const itemPrice = Number(dbProduct.price);
+      total += itemPrice * cartItem.quantity;
+      
+      validatedItems.push({
+        productId: dbProduct.id,
+        quantity: cartItem.quantity,
+        price: dbProduct.price
+      });
     }
 
-    await prisma.$transaction(async (tx: any) => {
+    console.log("[placeBulkOrder] Validation successful. Total:", total);
+
+    const newOrder = await prisma.$transaction(async (tx) => {
       // 1. Create the Order
-      await tx.order.create({
+      const order = await tx.order.create({
         data: {
           userId: user.id,
           businessId: user.businessId,
-          total,
+          total: total,
+          status: "PENDING",
           products: {
-            create: cartProducts.map((p: any) => ({
-
-              productId: p.productId,
-              quantity: p.quantity,
-              price: p.price
+            create: validatedItems.map((item) => ({
+              productId: item.productId,
+              quantity: item.quantity,
+              price: item.price
             }))
           }
         }
       });
 
       // 2. Decrement inventory for each product
-      for (const p of cartProducts) {
+      for (const item of validatedItems) {
         await tx.product.update({
-          where: { id: p.productId },
-          data: { quantity: { decrement: p.quantity } }
+          where: { id: item.productId },
+          data: { quantity: { decrement: item.quantity } }
         });
       }
+
+      return order;
     });
 
+    console.log("[placeBulkOrder] Order created successfully:", newOrder.id);
+    revalidatePath("/buyer");
+    revalidatePath("/seller/orders");
     revalidatePath("/");
-    return { success: true };
-  } catch (e) {
+    
+    return { success: true, orderId: newOrder.id };
+  } catch (e: any) {
     console.error("Bulk order error:", e);
-    return { error: "Failed to process checkout. Please try again." };
+    return { error: `Failed to process checkout: ${e.message || 'Unknown error'}` };
   }
 }
 
@@ -451,8 +477,8 @@ export async function updateOrderStatus(orderId: number, status: "PENDING" | "PR
       data: { status }
     });
 
-    revalidatePath("/manager/orders");
-    revalidatePath("/client");
+    revalidatePath("/seller/orders");
+    revalidatePath("/buyer");
     return { success: true };
   } catch (e) {
     console.error("Update status error:", e);
