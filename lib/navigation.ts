@@ -8,6 +8,7 @@ export const adminNavItems = [
 export const managerNavItems = [
   { name: "Dashboard", href: "/manager", icon: "📊" },
   { name: "Inventory", href: "/manager/inventory", icon: "📦" },
+  { name: "Requests", href: "/manager/requests", icon: "📋" },
   { name: "Orders", href: "/manager/orders", icon: "🛒" },
   { name: "Reports", href: "/manager/reports", icon: "📈" },
 ];
