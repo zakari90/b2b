@@ -4,6 +4,7 @@ import { CartProvider } from "@/context/CartContext";
 import Script from "next/script";
 import { Inter, Outfit } from "next/font/google";
 import { cn } from "@/lib/utils";
+import PWAWrapper from "@/components/pwa/PWAWrapper";
 
 const outfitHeading = Outfit({
   subsets: ["latin"],
@@ -27,10 +28,11 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: "#2563eb",
+  themeColor: "#0f172a",
   width: "device-width",
   initialScale: 1,
   maximumScale: 1,
+  userScalable: false,
 };
 
 export default function RootLayout({
@@ -52,23 +54,9 @@ export default function RootLayout({
         <link rel="apple-touch-icon" href="/icon-192x192.png" />
       </head>
       <body className="min-h-full flex flex-col">
-        <CartProvider>{children}</CartProvider>
-        <Script id="register-sw" strategy="afterInteractive">
-          {`
-            if ('serviceWorker' in navigator) {
-              window.addEventListener('load', function() {
-                navigator.serviceWorker.register('/sw.js').then(
-                  function(registration) {
-                    console.log('Service Worker registration successful with scope: ', registration.scope);
-                  },
-                  function(err) {
-                    console.log('Service Worker registration failed: ', err);
-                  }
-                );
-              });
-            }
-          `}
-        </Script>
+        <PWAWrapper>
+          <CartProvider>{children}</CartProvider>
+        </PWAWrapper>
       </body>
     </html>
   );

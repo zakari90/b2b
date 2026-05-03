@@ -6,6 +6,7 @@ import { redirect } from "next/navigation";
 import { Users, Building2, Package, ShieldCheck, Clock, UserPlus, Box, ChevronRight } from "lucide-react";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
+import PushPermissionTrigger from "@/components/pwa/PushPermissionTrigger";
 
 export const dynamic = "force-dynamic";
 
@@ -80,6 +81,10 @@ export default async function AdminDashboard() {
         <StatCard title="Inventory" value={productCount} icon={Package} color="violet" />
         <StatCard title="Pending" value={pendingApprovals} icon={Clock} color="amber" highlight={pendingApprovals > 0} />
         <StatCard title="Uptime" value="99.9%" icon={ShieldCheck} color="emerald" />
+      </div>
+
+      <div className="max-w-xl">
+        <PushPermissionTrigger />
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">

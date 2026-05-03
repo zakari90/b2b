@@ -62,6 +62,7 @@ model User {
   role        roles      @default(buyer)
   status      userStatus @default(PENDING)
   orders      Order[]
+  subscriptions PushSubscription[]
 
   @@index([businessId])
 }
@@ -126,4 +127,16 @@ model OrderProduct {
 
   @@index([orderId])
   @@index([productId])
+}
+
+model PushSubscription {
+  id        Int      @id @default(autoincrement())
+  endpoint  String   @unique
+  p256dh    String
+  auth      String
+  createdAt DateTime @default(now())
+  userId    Int?
+  user      User?    @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
 }
