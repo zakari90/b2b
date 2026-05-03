@@ -23,6 +23,29 @@ const nextConfig: NextConfig = {
   // Declaring an empty turbopack config silences the "webpack config detected" warning
   // when Vercel runs the build without --webpack explicitly set.
   turbopack: {},
+  async headers() {
+    return [
+      {
+        source: "/sw.js",
+        headers: [
+          {
+            key: "Cache-Control",
+            value: "no-store, no-cache, must-revalidate, proxy-revalidate",
+          },
+          { key: "Pragma", value: "no-cache" },
+          { key: "Expires", value: "0" },
+        ],
+      },
+      {
+        source: "/workbox-:path(.*)",
+        headers: [{ key: "Cache-Control", value: "no-store" }],
+      },
+      {
+        source: "/swe-worker-:path(.*)",
+        headers: [{ key: "Cache-Control", value: "no-store" }],
+      },
+    ];
+  },
 };
 
 export default withSerwist(nextConfig);
