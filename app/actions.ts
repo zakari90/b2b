@@ -390,7 +390,7 @@ export async function placeBulkOrder(cartProducts: { productId: number, quantity
 
     // Validate and calculate total using DB prices for security
     let total = 0;
-    const validatedItems = [];
+    const validatedItems: { productId: number; quantity: number; price: any }[] = [];
 
     for (const cartItem of cartProducts) {
       const dbProduct = dbProducts.find(p => p.id === cartItem.productId);
