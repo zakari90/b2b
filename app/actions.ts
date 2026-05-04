@@ -442,6 +442,49 @@ export async function placeBulkOrder(cartProducts: { productId: number, quantity
     });
 
     console.log("[placeBulkOrder] Order created successfully:", newOrder.id);
+
+    // --- PUSH NOTIFICATIONS ---
+    try {
+      const sellers = await prisma.user.findMany({
+        where: { 
+          businessId: user.businessId,
+          role: "saller"
+        }
+      });
+      
+      const recipientIds = sellers.map(s => s.id);
+      const subscriptions = await prisma.pushSubscription.findMany({
+        where: { userId: { in: recipientIds } }
+      });
+
+      if (subscriptions.length > 0) {
+        const webpush = (await import("web-push")).default;
+        webpush.setVapidDetails(
+          process.env.VAPID_SUBJECT || "mailto:admin@example.com",
+          process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY!,
+          process.env.VAPID_PRIVATE_KEY!
+        );
+
+        const pushPromises = subscriptions.map(sub => {
+          return webpush.sendNotification(
+            {
+              endpoint: sub.endpoint,
+              keys: { p256dh: sub.p256dh, auth: sub.auth }
+            },
+            JSON.stringify({
+              title: "New Order Placed!",
+              body: `A new order has been placed for your business.`,
+              url: "/seller/orders"
+            })
+          ).catch(err => console.error("Push error:", err));
+        });
+        await Promise.all(pushPromises);
+      }
+    } catch (pushErr) {
+      console.error("Failed to send order notification:", pushErr);
+    }
+    // ---------------------------
+
     revalidatePath("/buyer");
     revalidatePath("/seller/orders");
     revalidatePath("/");
@@ -476,6 +519,40 @@ export async function updateOrderStatus(orderId: number, status: "PENDING" | "PR
       where: { id: orderId },
       data: { status }
     });
+
+    // --- PUSH NOTIFICATIONS ---
+    try {
+      const subscriptions = await prisma.pushSubscription.findMany({
+        where: { userId: order.userId }
+      });
+
+      if (subscriptions.length > 0) {
+        const webpush = (await import("web-push")).default;
+        webpush.setVapidDetails(
+          process.env.VAPID_SUBJECT || "mailto:admin@example.com",
+          process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY!,
+          process.env.VAPID_PRIVATE_KEY!
+        );
+
+        const pushPromises = subscriptions.map(sub => {
+          return webpush.sendNotification(
+            {
+              endpoint: sub.endpoint,
+              keys: { p256dh: sub.p256dh, auth: sub.auth }
+            },
+            JSON.stringify({
+              title: "Order Status Updated",
+              body: `Your order #${orderId} is now ${status}.`,
+              url: "/buyer"
+            })
+          ).catch(err => console.error("Push error:", err));
+        });
+        await Promise.all(pushPromises);
+      }
+    } catch (pushErr) {
+      console.error("Failed to send status notification:", pushErr);
+    }
+    // ---------------------------
 
     revalidatePath("/seller/orders");
     revalidatePath("/buyer");
