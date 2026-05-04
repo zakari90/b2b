@@ -51,3 +51,4 @@ CLAUDE.md
 # Scratch files and SQL dumps
 /scratch/
 /prisma/*.sql
+presentation.md
