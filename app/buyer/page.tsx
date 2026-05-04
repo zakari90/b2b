@@ -7,6 +7,7 @@ import AddToCartButton from "@/components/AddToCartButton";
 import CartDrawer from "@/components/CartDrawer";
 import { ShoppingBag, ChevronRight, Package, Calendar, Tag, CheckCircle2, Clock, Truck, AlertCircle } from "lucide-react";
 import { cn } from "@/lib/utils";
+import BuyerOrdersList from "@/components/BuyerOrdersList";
 
 export const dynamic = "force-dynamic";
 
@@ -176,69 +177,7 @@ export default async function BuyerPage({
               <h2 className="text-xl font-black uppercase tracking-widest font-heading text-zinc-900">Purchase History</h2>
             </div>
 
-            <div className="space-y-4">
-              {user.orders.length === 0 && (
-                <div className="bg-white rounded-[2rem] border border-dashed border-zinc-200 p-12 text-center space-y-4">
-                  <div className="w-16 h-16 bg-zinc-50 rounded-full flex items-center justify-center text-zinc-200 mx-auto">
-                    <Calendar size={32} />
-                  </div>
-                  <p className="text-zinc-400 font-bold uppercase tracking-widest text-[10px]">No orders found</p>
-                </div>
-              )}
-              
-              {user.orders.map((order: any) => {
-                const config = getStatusConfig(order.status);
-                return (
-                  <div key={order.id} className="group bg-white rounded-3xl border border-zinc-100 shadow-sm hover:shadow-xl hover:shadow-indigo-500/5 transition-all overflow-hidden relative">
-                    <div className={cn("absolute top-0 left-0 bottom-0 w-1", config.color)} />
-                    <div className="p-6 space-y-4">
-                      <div className="flex justify-between items-start">
-                        <div>
-                          <p className="text-[10px] font-black uppercase tracking-widest text-zinc-400 mb-1">Order Ref</p>
-                          <p className="font-bold text-sm text-zinc-900">#{order.id.slice(-6).toUpperCase()}</p>
-                        </div>
-                        <div className={cn("flex items-center gap-2 px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest", config.color.replace('bg-', 'text-'), config.color.replace('bg-', 'bg-') + '/10')}>
-                          <config.icon size={12} />
-                          {config.text}
-                        </div>
-                      </div>
-
-                      <details className="group/details">
-                        <summary className="list-none cursor-pointer flex items-center justify-between text-xs font-bold text-zinc-500 hover:text-indigo-600 transition-colors">
-                          <span className="flex items-center gap-2">
-                            <Tag size={12} />
-                            View {order.products.length} line items
-                          </span>
-                          <ChevronRight size={14} className="group-open/details:rotate-90 transition-transform" />
-                        </summary>
-                        <div className="mt-4 space-y-3 pt-4 border-t border-zinc-50">
-                          {order.products.map((op: any) => (
-                            <div key={op.id} className="flex justify-between items-center text-xs">
-                              <div className="flex flex-col">
-                                <span className="font-black text-zinc-900">{op.product.name}</span>
-                                <span className="text-zinc-400 text-[10px] uppercase font-bold">{op.quantity} x ${Number(op.price).toFixed(2)}</span>
-                              </div>
-                              <span className="font-black text-indigo-600">${(Number(op.price) * op.quantity).toFixed(2)}</span>
-                            </div>
-                          ))}
-                        </div>
-                      </details>
-
-                      <div className="pt-4 border-t border-zinc-50 flex justify-between items-end">
-                        <div className="space-y-1">
-                          <p className="text-[10px] font-black uppercase tracking-widest text-zinc-400">Total Amount</p>
-                          <p className="font-black text-xl text-zinc-900">${Number(order.total).toFixed(2)}</p>
-                        </div>
-                        <div className="text-right">
-                          <p className="text-[10px] font-black uppercase tracking-widest text-zinc-400">Placed on</p>
-                          <p className="text-[10px] font-bold text-zinc-600">{new Date(order.createdAt).toLocaleDateString()}</p>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
+            <BuyerOrdersList orders={user.orders} />
           </aside>
         </div>
       </div>

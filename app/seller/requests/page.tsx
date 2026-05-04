@@ -14,6 +14,7 @@ import {
   ArrowUpDown
 } from "lucide-react";
 import { cn } from "@/lib/utils";
+import SellerRequestsList from "@/components/SellerRequestsList";
 
 export const dynamic = "force-dynamic";
 
@@ -114,92 +115,19 @@ export default async function SellerRequestsPage() {
         </div>
       </div>
 
-      {/* Main Table */}
       <div className="bg-white rounded-[2.5rem] border border-zinc-100 shadow-sm overflow-hidden">
-        <div className="overflow-x-auto">
-          <table className="w-full text-left border-collapse">
-            <thead>
-              <tr className="bg-zinc-50/50 border-bottom border-zinc-100">
-                <th className="px-8 py-6 text-[10px] font-black uppercase tracking-widest text-zinc-400">Buyer & Business</th>
-                <th className="px-8 py-6 text-[10px] font-black uppercase tracking-widest text-zinc-400">Requested Product</th>
-                <th className="px-8 py-6 text-[10px] font-black uppercase tracking-widest text-zinc-400 text-center">Qty</th>
-                <th className="px-8 py-6 text-[10px] font-black uppercase tracking-widest text-zinc-400 text-right">Total Value</th>
-                <th className="px-8 py-6 text-[10px] font-black uppercase tracking-widest text-zinc-400">Date</th>
-                <th className="px-8 py-6 text-[10px] font-black uppercase tracking-widest text-zinc-400 text-right">Status</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-zinc-50">
-              {requests.length === 0 ? (
-                <tr>
-                  <td colSpan={6} className="px-8 py-20 text-center">
-                    <div className="space-y-4 max-w-xs mx-auto">
-                      <div className="w-16 h-16 bg-zinc-50 rounded-full flex items-center justify-center text-zinc-200 mx-auto">
-                        <Package size={32} />
-                      </div>
-                      <p className="text-zinc-400 font-black uppercase tracking-widest text-xs">No buyer requests found for your products</p>
-                    </div>
-                  </td>
-                </tr>
-              ) : (
-                requests.map((request) => {
-                  const status = getStatusConfig(request.order.status);
-                  return (
-                    <tr key={request.id} className="hover:bg-zinc-50/50 transition-all group">
-                      <td className="px-8 py-6">
-                        <div className="flex items-center gap-4">
-                          <div className="w-10 h-10 rounded-xl bg-indigo-600 text-white flex items-center justify-center font-black text-xs shadow-md">
-                            {request.order.user.username[0].toUpperCase()}
-                          </div>
-                          <div>
-                            <p className="font-bold text-zinc-900 text-sm leading-none mb-1">{request.order.user.username}</p>
-                            <div className="flex items-center gap-1.5 text-zinc-400">
-                              <Building2 size={10} />
-                              <p className="text-[9px] font-black uppercase tracking-widest">{request.order.user.business.name}</p>
-                            </div>
-                          </div>
-                        </div>
-                      </td>
-                      <td className="px-8 py-6">
-                        <div className="space-y-1">
-                          <p className="font-bold text-zinc-900 text-sm leading-none">{request.product.name}</p>
-                          <p className="text-[10px] font-black uppercase tracking-widest text-zinc-400 italic">SKU: {request.product.id}</p>
-                        </div>
-                      </td>
-                      <td className="px-8 py-6 text-center">
-                        <span className="px-3 py-1 bg-zinc-100 rounded-full text-xs font-black text-zinc-900 border border-zinc-200 shadow-sm">
-                          {request.quantity}
-                        </span>
-                      </td>
-                      <td className="px-8 py-6 text-right">
-                        <p className="font-black text-indigo-600 text-sm tracking-tight">
-                          ${(Number(request.price) * request.quantity).toLocaleString(undefined, { minimumFractionDigits: 2 })}
-                        </p>
-                      </td>
-                      <td className="px-8 py-6">
-                        <div className="flex items-center gap-2 text-zinc-500">
-                          <Clock size={12} />
-                          <span className="text-[10px] font-black uppercase tracking-widest">
-                            {new Date(request.order.createdAt).toLocaleDateString()}
-                          </span>
-                        </div>
-                      </td>
-                      <td className="px-8 py-6 text-right">
-                        <div className={cn(
-                          "inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[9px] font-black uppercase tracking-widest border shadow-sm",
-                          status.color.replace('text-', 'border-').replace('bg-', 'bg-opacity-20 bg-'),
-                          status.color
-                        )}>
-                          <status.icon size={12} />
-                          {status.text}
-                        </div>
-                      </td>
-                    </tr>
-                  );
-                })
-              )}
-            </tbody>
-          </table>
-        </div>
+        {requests.length === 0 ? (
+          <div className="px-8 py-20 text-center">
+            <div className="space-y-4 max-w-xs mx-auto">
+              <div className="w-16 h-16 bg-zinc-50 rounded-full flex items-center justify-center text-zinc-200 mx-auto">
+                <Package size={32} />
+              </div>
+              <p className="text-zinc-400 font-black uppercase tracking-widest text-xs">No buyer requests found for your products</p>
+            </div>
+          </div>
+        ) : (
+          <SellerRequestsList requests={requests} />
+        )}
       </div>
     </div>
   );

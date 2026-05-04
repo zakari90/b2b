@@ -62,6 +62,7 @@ model User {
   role        roles      @default(buyer)
   status      userStatus @default(PENDING)
   orders      Order[]
+  messages    OrderMessage[]
   subscriptions PushSubscription[]
 
   @@index([businessId])
@@ -109,6 +110,7 @@ model Order {
   user       User         @relation(fields: [userId], references: [id])
 
   products   OrderProduct[]
+  messages   OrderMessage[]
 
   @@index([businessId])
   @@index([userId])
@@ -139,4 +141,19 @@ model PushSubscription {
   user      User?    @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@index([userId])
+}
+
+model OrderMessage {
+  id        Int      @id @default(autoincrement())
+  content   String
+  createdAt DateTime @default(now())
+  
+  senderId  Int
+  sender    User     @relation(fields: [senderId], references: [id])
+  
+  orderId   Int
+  order     Order    @relation(fields: [orderId], references: [id], onDelete: Cascade)
+
+  @@index([orderId])
+  @@index([senderId])
 }

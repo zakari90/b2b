@@ -503,3 +503,152 @@ export async function updateUserStatus(userId: number, status: "ACTIVE" | "INACT
     return { error: "Failed to update user status." };
   }
 }
+
+export async function sendOrderMessage(orderId: number, content: string) {
+  try {
+    const session = await auth();
+    if (!session?.user?.id) return { error: "Authentication required." };
+
+    const senderId = parseInt(session.user.id);
+    const order = await prisma.order.findUnique({
+      where: { id: orderId },
+      include: { 
+        user: true, 
+        business: { 
+          include: { 
+            users: true 
+          } 
+        } 
+      }
+    });
+
+    if (!order) return { error: "Order not found." };
+
+    // Security: Only buyer or seller's business users can message
+    const isBuyer = order.userId === senderId;
+    const isSeller = order.business.users.some(u => u.id === senderId);
+
+    if (!isBuyer && !isSeller) {
+      return { error: "You don't have permission to message on this order." };
+    }
+
+    const message = await (prisma as any).orderMessage.create({
+      data: {
+        content,
+        orderId,
+        senderId
+      }
+    });
+
+    // --- PUSH NOTIFICATIONS ---
+    try {
+      const recipientIds: number[] = [];
+      if (isBuyer) {
+        // Notify all users in the seller's business
+        recipientIds.push(...order.business.users.map(u => u.id));
+      } else {
+        // Notify the buyer
+        recipientIds.push(order.userId);
+      }
+
+      // Filter out the sender themselves (if they happen to be in both)
+      const uniqueRecipientIds = [...new Set(recipientIds)].filter(id => id !== senderId);
+
+      // Get subscriptions for these recipients
+      const subscriptions = await prisma.pushSubscription.findMany({
+        where: { userId: { in: uniqueRecipientIds } }
+      });
+
+      if (subscriptions.length > 0) {
+        // Call the internal push send logic (or just import webpush here)
+        // For simplicity and to reuse the API logic, we'll import webpush
+        const webpush = (await import("web-push")).default;
+        webpush.setVapidDetails(
+          process.env.VAPID_SUBJECT || "mailto:admin@example.com",
+          process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY!,
+          process.env.VAPID_PRIVATE_KEY!
+        );
+
+        const pushPromises = subscriptions.map(sub => {
+          const pushSub = {
+            endpoint: sub.endpoint,
+            keys: {
+              p256dh: sub.p256dh,
+              auth: sub.auth,
+            }
+          };
+
+          return webpush.sendNotification(
+            pushSub,
+            JSON.stringify({
+              title: `New Message from ${session.user?.name || 'User'}`,
+              body: content.length > 50 ? content.substring(0, 47) + "..." : content,
+              url: isBuyer ? "/seller/orders" : "/buyer"
+            })
+          ).catch(err => console.error("Error sending message notification:", err));
+        });
+
+        await Promise.all(pushPromises);
+      }
+    } catch (pushErr) {
+      console.error("Failed to send push notification for message:", pushErr);
+      // Don't fail the message creation if notification fails
+    }
+    // ---------------------------
+
+    revalidatePath("/buyer");
+    revalidatePath("/seller/orders");
+    
+    return { success: true, message };
+  } catch (e) {
+    console.error("Error sending message:", e);
+    return { error: "Failed to send message." };
+  }
+}
+
+export async function getOrderMessages(orderId: number) {
+  try {
+    const session = await auth();
+    if (!session?.user?.id) return { error: "Authentication required." };
+
+    const userId = parseInt(session.user.id);
+    const order = await prisma.order.findUnique({
+      where: { id: orderId },
+      include: { 
+        business: { 
+          include: { 
+            users: true 
+          } 
+        } 
+      }
+    });
+
+    if (!order) return { error: "Order not found." };
+
+    // Security check
+    const isBuyer = order.userId === userId;
+    const isSeller = order.business.users.some(u => u.id === userId);
+
+    if (!isBuyer && !isSeller) {
+      return { error: "Unauthorized" };
+    }
+
+    const messages = await (prisma as any).orderMessage.findMany({
+      where: { orderId },
+      include: { 
+        sender: { 
+          select: { 
+            username: true, 
+            role: true 
+          } 
+        } 
+      },
+      orderBy: { createdAt: "asc" }
+    });
+
+    return { messages };
+  } catch (e) {
+    console.error("Error fetching messages:", e);
+    return { error: "Failed to fetch messages." };
+  }
+}
